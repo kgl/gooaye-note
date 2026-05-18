@@ -96,4 +96,21 @@ ${cards}
 `;
 
 fs.writeFileSync(path.join(outputDir, "index.html"), index);
+fs.writeFileSync(
+  "index.html",
+  `<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url=rendered/index.html">
+  <title>Gooaye 股癌筆記</title>
+  <link rel="canonical" href="rendered/index.html">
+</head>
+<body>
+  <p><a href="rendered/index.html">前往 Gooaye 股癌筆記索引</a></p>
+</body>
+</html>
+`
+);
 console.log(`Rendered ${notes.length} notes to ${outputDir}/`);
