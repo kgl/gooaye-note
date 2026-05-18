@@ -13,11 +13,9 @@
 | 2026-05-09 | [Markdown](notes/2026-05-09_股癌筆記.md) | [HTML](rendered/2026-05-09_股癌筆記.html) |
 | 2026-05-06 | [Markdown](notes/2026-05-06_股癌筆記.md) | [HTML](rendered/2026-05-06_股癌筆記.html) |
 
-HTML 索引頁：
+HTML 首頁：
 
-[rendered/index.html](rendered/index.html)
-
-部署到靜態主機時，根目錄的 `index.html` 會自動導到這個索引頁。
+[index.html](index.html)
 
 ## 目錄
 
@@ -38,7 +36,6 @@ node scripts/build_all_html.js
 這會重新產生：
 
 - `index.html`
-- `rendered/index.html`
 - `rendered/YYYY-MM-DD_股癌筆記.html`
 - `rendered/assets/gooaye-note.css`
 

@@ -63,7 +63,7 @@ const cards = notes
   .slice()
   .reverse()
   .map(
-    (note) => `<a class="card" href="${escapeHtml(path.basename(note.output))}">
+    (note) => `<a class="card" href="${escapeHtml(note.output)}">
       <span class="date">${escapeHtml(note.date)}</span>
       <strong>${escapeHtml(note.title)}</strong>
       <span class="path">${escapeHtml(note.source)}</span>
@@ -78,7 +78,7 @@ const index = `<!doctype html>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gooaye 股癌筆記索引</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css">
-  <link rel="stylesheet" href="assets/gooaye-note.css">
+  <link rel="stylesheet" href="rendered/assets/gooaye-note.css">
 </head>
 <body>
   <main class="index">
@@ -95,22 +95,5 @@ ${cards}
 </html>
 `;
 
-fs.writeFileSync(path.join(outputDir, "index.html"), index);
-fs.writeFileSync(
-  "index.html",
-  `<!doctype html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=rendered/index.html">
-  <title>Gooaye 股癌筆記</title>
-  <link rel="canonical" href="rendered/index.html">
-</head>
-<body>
-  <p><a href="rendered/index.html">前往 Gooaye 股癌筆記索引</a></p>
-</body>
-</html>
-`
-);
+fs.writeFileSync("index.html", index);
 console.log(`Rendered ${notes.length} notes to ${outputDir}/`);
