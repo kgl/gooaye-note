@@ -1,63 +1,90 @@
-# Gooaye 股癌筆記
+# 股癌筆記維護指南
 
-這個 repo 收錄 Gooaye 股癌 podcast 的結構化筆記，並把 Markdown 筆記產生成適合閱讀的 HTML 版本。
+專案介紹與公開網站入口請見根目錄的 [README.md](../README.md)。本文件專注於新增筆記、重建 HTML 與發布前檢查。
 
-筆記內容以節目逐字稿或 podcast 音訊中明確出現的資訊為準，整理重點包含整集摘要、新聞卡、主持人持倉揭露、標的/族群觀點表與 Q&A 心法。這不是投資建議，也不補充節目外的即時行情或研究結論。
+## 新增一期筆記
 
-## 目前內容
+1. 在 `notes/` 新增 `YYYY-MM-DD_股癌筆記.md`。
+2. 依固定章節完成摘要、新聞、持倉揭露、標的觀點、Q&A 與資料來源。
+3. 從專案根目錄執行 `node scripts/build_all_html.js`。
+4. 確認新的 HTML 已出現在 `rendered/`，且 `index.html` 將最新日期排在最前面。
+5. 提交 Markdown、單集 HTML、`index.html`，以及確實需要更新的共用資產或來源快照。
 
-| 日期 | 筆記 | HTML |
-| --- | --- | --- |
-| 2026-05-16 | [Markdown](../notes/2026-05-16_股癌筆記.md) | [HTML](../rendered/2026-05-16_股癌筆記.html) |
-| 2026-05-13 | [Markdown](../notes/2026-05-13_股癌筆記.md) | [HTML](../rendered/2026-05-13_股癌筆記.html) |
-| 2026-05-09 | [Markdown](../notes/2026-05-09_股癌筆記.md) | [HTML](../rendered/2026-05-09_股癌筆記.html) |
-| 2026-05-06 | [Markdown](../notes/2026-05-06_股癌筆記.md) | [HTML](../rendered/2026-05-06_股癌筆記.html) |
+## Markdown 結構
 
-HTML 首頁：
-
-[index.html](../index.html)
-
-## 目錄
+每篇正式筆記依下列順序撰寫：
 
 ```text
-notes/      Final Markdown notes
-rendered/   Beautified HTML output and shared CSS
-scripts/    Small helper scripts for extraction and rendering
-archive/    Source audio, transcripts, feed snapshots, and system artifacts
-docs/       Repository documentation
+# YYYY-MM-DD 股癌筆記
+
+- 節目
+- 標題
+- 發布日期
+- 長度
+- 主要資料來源
+- Apple Podcasts
+- SoundOn
+- 逐字稿來源
+- 範圍說明
+
+## 整集摘要 summary
+## 今日新聞整理 news
+## 主持人持倉揭露 hostDisclosure
+## 主題/標的觀點表 stockAnalysis
+## Q&A 心法 qa
+## 資料來源
 ```
 
-## 重新產生 HTML
+新聞卡應包含 `category`、`sourceRef`、`event` 與 `opinion`。持倉揭露應包含 `sourceRef`、`disclosure` 與 `context`。所有段落都應保留可回聽的時間戳。
 
-需要 Node.js。從 repo 根目錄執行：
+## 產生 HTML
+
+批次重建所有筆記與索引：
 
 ```bash
 node scripts/build_all_html.js
 ```
 
-這會重新產生：
+只產生單篇 HTML：
 
-- `index.html`
-- `rendered/YYYY-MM-DD_股癌筆記.html`
-- `rendered/assets/gooaye-note.css`
+```bash
+node scripts/render_note_html.js notes/YYYY-MM-DD_股癌筆記.md rendered/YYYY-MM-DD_股癌筆記.html
+```
 
-HTML 使用 Pico CSS CDN 加上一份共享樣式檔，避免每篇 HTML inline 大段 CSS。
+HTML 使用 Pico CSS CDN 與 `rendered/assets/gooaye-note.css`。不要把大型 CSS bundle 重複內嵌到每篇頁面。
 
-## 輔助腳本
+## 產生 PDF
 
-- `scripts/build_all_html.js`：批次把 `notes/` 裡的 Markdown 產生成 HTML 與索引。
-- `scripts/render_note_html.js`：單篇 Markdown 轉 HTML。
-- `scripts/extract_vocus.js`：從 Vocus HTML 擷取 JSON-LD `articleBody` 或時間戳逐字稿。
-- `scripts/md_to_pdf.py`：用本機 Chrome/Chromium 從 HTML 輸出 PDF。
+PDF 工具需要本機 Chrome 或 Chromium，並遵循專案的 uv Python 規則：
 
-## 筆記原則
+```bash
+uv run python scripts/md_to_pdf.py notes/YYYY-MM-DD_股癌筆記.md
+```
 
-- 只整理 podcast 或逐字稿中明確說出的內容。
-- 開頭贊助廣告口播不納入摘要與新聞卡。
-- 不推測、不補外部基本面、不加入個人投資看法。
-- 持倉揭露只記錄主持人明確說有持有、買入、賣出、出清、加碼、減碼或槓桿調整的內容。
-- 標的與產業觀點保留節目中的推論邏輯與不確定性。
+若找不到瀏覽器，工具仍會留下中間 HTML，但不會產生 PDF。
 
-## Disclaimer
+## 輔助工具
 
-本 repo 是個人學習與資料整理用途。所有商標、節目名稱與原始內容權利屬原權利人所有。內容不構成任何投資建議、買賣建議或研究報告；請自行判斷風險。
+- `scripts/build_all_html.js`：批次產生所有 HTML、共用樣式與首頁索引。
+- `scripts/render_note_html.js`：將單篇 Markdown 轉為 HTML。
+- `scripts/extract_vocus.js`：優先從 Vocus HTML 的 JSON-LD `articleBody` 擷取逐字稿。
+- `scripts/extract_podwise_transcript.js`：擷取 Podwise 匯出的逐字稿內容。
+- `scripts/md_to_pdf.py`：透過本機瀏覽器輸出 PDF。
+
+## 發布前檢查
+
+- 最新一集的日期、集數、時間長度與來源網址一致。
+- 逐字稿最後時間戳接近節目完整長度。
+- 開場贊助口播未被整理成新聞卡。
+- 所有持倉狀態都來自主持人明確說法，沒有把聽眾推測當成事實。
+- 專有名詞已核對，無法確認者保留不確定標記。
+- `node scripts/build_all_html.js` 執行成功。
+- 新筆記在 `index.html` 排序正確，公開 HTML 的章節與表格可正常閱讀。
+
+## GitHub Pages
+
+公開網站由 `main` 分支根目錄發布：
+
+<https://kgl.github.io/gooaye-note/>
+
+PR 合併後，應等待 Pages 部署狀態完成，再直接開啟新單集網址確認內容已更新。
